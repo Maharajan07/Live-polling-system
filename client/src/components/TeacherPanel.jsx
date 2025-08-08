@@ -1,6 +1,7 @@
 // src/components/TeacherPanel.jsx
 import React, { useState } from 'react';
 import './TeacherPanel.css';
+import { socket } from "../socket";
 
 const TeacherPanel = () => {
   const [question, setQuestion] = useState('');
@@ -27,16 +28,39 @@ const TeacherPanel = () => {
   };
 
   const handleAskQuestion = () => {
-    // Emit socket or handle logic here
-    console.log('Sending question:', { question, options, duration });
-  };
+  if (!question.trim() || options.some(o => !o.text.trim())) {
+    alert("Please enter a question and all options");
+    return;
+  }
+
+  // send poll with correct structure for StudentPanel
+  socket.emit('createPoll', {
+    question,
+    options: options.map(o => ({
+      text: o.text,
+      votes: 0
+    }))
+  });
+
+  console.log('Poll sent:', {
+    question,
+    options: options.map(o => ({ text: o.text, votes: 0 }))
+  });
+
+  setQuestion('');
+  setOptions([
+    { text: '', isCorrect: null },
+    { text: '', isCorrect: null },
+  ]);
+};
+
 
   return (
     <div className="teacher-panel">
       <div className="label">✨ Intervue Poll</div>
       <h1 className="title">Let’s <strong>Get Started</strong></h1>
       <p className="description">
-        you’ll have the ability to create and manage polls, ask questions, and monitor your students' responses in real-time.
+        Create and manage polls, ask questions, and monitor responses in real-time.
       </p>
 
       <div className="section">

@@ -1,6 +1,7 @@
+// src/components/Home.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Home.css'; // 👈 Import the CSS file
+import './Home.css';
 
 const Home = () => {
   const [role, setRole] = useState(null);
@@ -28,7 +29,7 @@ const Home = () => {
         >
           <strong>I’m a Student</strong>
           <p className="home-card-text">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry
+            Participate in live polls and submit your answers in real-time.
           </p>
         </div>
 
@@ -38,12 +39,16 @@ const Home = () => {
         >
           <strong>I’m a Teacher</strong>
           <p className="home-card-text">
-            Submit answers and view live poll results in real-time.
+            Create and manage polls, ask questions, and monitor responses.
           </p>
         </div>
       </div>
 
-      <button className="home-button" onClick={handleContinue} disabled={!role}>
+      <button
+        className="home-button"
+        onClick={handleContinue}
+        disabled={!role}
+      >
         Continue
       </button>
     </div>
