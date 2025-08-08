@@ -54,3 +54,183 @@
   cursor: pointer;
   font-weight: bold;
 }
+
+
+
+
+
+
+.student-option {
+  padding: 10px 15px;
+  margin: 8px 0;
+  width: 100%;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.student-option.selected {
+  background: #4cafef;
+  color: white;
+}
+
+.student-submit {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  background: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.poll-results {
+  margin-top: 20px;
+}
+
+.result-option {
+  margin-bottom: 12px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #4caf50;
+}
+
+
+
+.poll-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  padding: 30px;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+.poll-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.poll-timer {
+  color: red;
+  font-weight: 600;
+}
+
+.poll-question {
+  font-size: 22px;
+  margin: 20px 0;
+}
+
+.poll-option {
+  display: flex;
+  align-items: center;
+  background: #f3f3f3;
+  border: 2px solid transparent;
+  padding: 12px 20px;
+  margin: 10px 0;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.poll-option:hover {
+  border-color: #ccc;
+}
+
+.poll-option.selected {
+  border-color: #6c63ff;
+  background: #e0e0ff;
+}
+
+.option-number {
+  background: #6c63ff;
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-weight: bold;
+}
+
+.student-submit {
+  background: linear-gradient(to right, #6c63ff, #5f52e9);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.student-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+
+.result-option {
+  margin-bottom: 16px;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.option-number {
+  background-color: #5b5fc7;
+  color: white;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.result-percent {
+  font-weight: 500;
+  font-size: 14px;
+  color: #000;
+}
+
+.progress-bar {
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #5b5fc7;
+  transition: width 0.3s ease-in-out;
+}

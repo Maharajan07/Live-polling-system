@@ -6,39 +6,72 @@ import { socket } from '../socket';
 const StudentPanel = () => {
   const [name, setName] = useState('');
   const [poll, setPoll] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [answered, setAnswered] = useState(false);
+  const [joined, setJoined] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(null);
 
   const handleContinue = () => {
     if (name.trim()) {
       socket.emit('joinStudent', name);
+      setJoined(true);
     }
   };
 
-  const handleVote = (index) => {
-    socket.emit('submitVote', index);
-    setAnswered(true);
+  const handleSubmitVote = () => {
+    if (selectedOption !== null && timeLeft > 0) {
+      socket.emit('submitVote', selectedOption);
+      setAnswered(true); // switch to results immediately
+    }
   };
 
   useEffect(() => {
     socket.on('pollData', (data) => {
       setPoll(data);
-      setAnswered(false);
+      setAnswered(false); // reset view for new question
+      setSelectedOption(null);
+      if (data.duration) {
+        setTimeLeft(data.duration);
+      }
     });
+
+    socket.on('updateResult', (updatedPoll) => {
+  if (answered) {
+    setPoll(updatedPoll); // just replace state, no reset
+  }
+});
+
 
     return () => {
       socket.off('pollData');
+      socket.off('updateResult');
     };
-  }, []);
+  }, [answered]);
+
+  useEffect(() => {
+    if (timeLeft === null || timeLeft <= 0) return;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [timeLeft]);
+
+  const formatTime = (seconds) => {
+    const mins = String(Math.floor(seconds / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    return `${mins}:${secs}`;
+  };
 
   return (
     <div className="student-container">
-      {!poll ? (
+      {/* Step 1: Name input screen */}
+      {!joined ? (
         <>
           <div className="student-tag">✨ Intervue Poll</div>
           <h1 className="student-heading">Let’s <strong>Get Started</strong></h1>
-          <p className="student-subtext">
-            Enter your name to join the poll
-          </p>
+          <p className="student-subtext">Enter your name to join the poll</p>
 
           <label className="student-label">Enter your Name</label>
           <input
@@ -53,32 +86,67 @@ const StudentPanel = () => {
             Continue
           </button>
         </>
-      ) : (
-        <div className="poll-section">
-          <h2>{poll.question}</h2>
+      ) : 
 
-          {poll.options && poll.options.length > 0 ? (
-            poll.options.map((opt, idx) => (
-              <button
-                key={idx}
-                className="student-button"
-                onClick={() => handleVote(idx)}
-                disabled={answered}
-              >
-                {opt.text}
-              </button>
-            ))
-          ) : (
-            <p>No options available</p>
-          )}
+      /* Step 2: Waiting screen */
+      joined && !poll ? (
+        <div className="waiting-screen">
+          <div className="student-tag">✨ Intervue Poll</div>
+          <div className="loader"></div>
+          <p className="waiting-text">Wait for the teacher to ask questions..</p>
+        </div>
+      ) : 
 
-          {answered && (
-            <div className="poll-results">
+      /* Step 3: Poll view */
+      (
+        <div className="poll-card">
+          <div className="poll-header">
+            <h3>Question 1</h3>
+            <span className="poll-timer">⏱ {formatTime(timeLeft || 0)}</span>
+          </div>
+
+          <h2 className="poll-question">{poll.question}</h2>
+
+          {!answered ? (
+            <>
               {poll.options.map((opt, idx) => (
-                <p key={idx}>
-                  {opt.text}: {opt.votes} votes
-                </p>
+                <button
+                  key={idx}
+                  className={`poll-option ${selectedOption === idx ? 'selected' : ''}`}
+                  onClick={() => setSelectedOption(idx)}
+                >
+                  <span className="option-number">{idx + 1}</span> {opt.text}
+                </button>
               ))}
+
+              <button
+                className="student-submit"
+                onClick={handleSubmitVote}
+                disabled={selectedOption === null || timeLeft === 0}
+              >
+                Submit
+              </button>
+            </>
+          ) : (
+            <div className="poll-results">
+              {poll.options.map((opt, idx) => {
+                const totalVotes = poll.options.reduce((sum, o) => sum + o.votes, 0);
+                const percentage = totalVotes === 0 ? 0 : Math.round((opt.votes / totalVotes) * 100);
+
+                return (
+                  <div key={idx} className="result-option">
+                    <div className="result-header">
+                      <span className="result-text">
+                        <span className="option-number">{idx + 1}</span> {opt.text}
+                      </span>
+                      <span className="result-percent">{percentage}%</span>
+                    </div>
+                    <div className="progress-bar">
+                      <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

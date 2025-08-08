@@ -14,7 +14,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173', // during dev; won't matter after serving build
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST'],
   },
 });
@@ -22,36 +22,82 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
-// ===== Serve React build =====
-const buildPath = path.join(__dirname,'client', 'dist'); // adjust if your build folder is elsewhere
-app.use(express.static(buildPath));
+// Serve build in production (unchanged)
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, '../client/dist');
+  app.use(express.static(buildPath));
+  app.get('*', (req, res) => res.sendFile(path.join(buildPath, 'index.html')));
+}
 
-// Store the current active poll in memory
+// store current poll and history
 let poll = null;
+let pollsHistory = []; // keep all created polls (with votes updated)
 
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
 
+  // send active poll if present
   if (poll) {
     socket.emit('pollData', poll);
   }
 
   socket.on('createPoll', (data) => {
+    // Create server-side poll with id
     poll = {
       id: Date.now(),
       question: data.question,
-      options: data.options // already in correct shape
+      options: data.options.map(o => ({ text: o.text, votes: o.votes || 0 })),
+      duration: data.duration || 15,
+      createdAt: Date.now(),
     };
+
+    // push a deep copy into history
+    pollsHistory.push(JSON.parse(JSON.stringify(poll)));
+
     console.log('Poll created:', poll);
+
+    // Broadcast new poll to everyone (students & teacher)
     io.emit('pollData', poll);
+
+    // Also emit updateResult so UI can show zeros immediately
+    io.emit('updateResult', poll);
   });
 
   socket.on('submitVote', (answerIndex) => {
     if (poll && poll.options[answerIndex]) {
       poll.options[answerIndex].votes += 1;
+
+      // update the corresponding poll in history by id
+      const hIndex = pollsHistory.findIndex(p => p.id === poll.id);
+      if (hIndex !== -1) {
+        pollsHistory[hIndex].options = poll.options.map(o => ({ ...o }));
+      }
+
       console.log(`Vote received for option ${answerIndex}:`, poll);
-      io.emit('pollData', poll);
+
+      // Broadcast only updateResult (not pollData) so clients don't reset answered state
+      io.emit('updateResult', poll);
     }
+  });
+
+  // For the "askQuestion" event (if used), treat the same as createPoll
+  socket.on('askQuestion', (questionData) => {
+    poll = {
+      id: Date.now(),
+      question: questionData.text,
+      options: questionData.options.map(opt => ({ text: opt, votes: 0 })),
+      duration: questionData.duration || 15,
+      createdAt: Date.now(),
+    };
+
+    pollsHistory.push(JSON.parse(JSON.stringify(poll)));
+    io.emit('pollData', poll);
+    io.emit('updateResult', poll);
+  });
+
+  socket.on('getPollHistory', () => {
+    // send the full history to the requester
+    socket.emit('pollHistory', pollsHistory);
   });
 
   socket.on('joinStudent', (studentName) => {
@@ -66,12 +112,5 @@ io.on('connection', (socket) => {
   });
 });
 
-// Fallback to React's index.html for any unknown route
-app.get('*', (req, res) => {
-  res.sendFile(path.join(buildPath, 'index.html'));
-});
-
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));

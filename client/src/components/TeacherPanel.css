@@ -144,3 +144,262 @@ textarea {
   border: none;
   cursor: pointer;
 }
+
+.loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #6a0dad; /* purple */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 30px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.waiting-screen {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.waiting-text {
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 15px;
+}
+
+
+/* --- Add these styles to TeacherPanel.css --- */
+
+/* Top-right history button */
+.history-btn {
+  position: absolute;
+  right: 40px;
+  top: 28px;
+  background: linear-gradient(90deg,#8a63f7,#655bf3);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 28px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(101,84,255,0.12);
+}
+
+/* Wrap the teacher results card centered and the ask-new button aligned right */
+.teacher-results-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40px;
+}
+
+/* Use same .poll-card style already in StudentPanel — but add a class to adjust width */
+.teacher-card {
+  max-width: 720px;
+  width: 100%;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: none;
+  border: 1px solid rgba(91,95,199,0.12);
+}
+
+/* card question */
+.card-question {
+  background: linear-gradient(180deg,#444,#666);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+/* rows */
+.teacher-result-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.03);
+}
+
+.teacher-option-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 260px;
+}
+
+.circle-num {
+  background: #5b5fc7;
+  color: #fff;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+}
+
+.option-text {
+  font-size: 15px;
+}
+
+/* right area */
+.teacher-option-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.result-bar {
+  width: 420px;
+  height: 36px;
+  background: #f2f2f5;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(91,95,199,0.08);
+}
+
+.result-bar .fill {
+  height: 100%;
+  background: #6a5acd;
+  transition: width 0.35s ease;
+}
+
+.percentage {
+  width: 50px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* ask new question button below card (right-aligned visually) */
+.ask-new-wrap {
+  width: 720px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.ask-new-btn {
+  background: linear-gradient(90deg,#8066f1,#5865f2);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 28px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* History overlay */
+.history-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 20px;
+  z-index: 9999;
+}
+
+.history-panel {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 80vh;
+  overflow: hidden;
+  padding: 28px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.close-history {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Scrollable history list */
+.history-list {
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Each history item card */
+.history-item {
+  margin-bottom: 28px;
+}
+
+.history-question {
+  background: linear-gradient(180deg,#444,#666);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.history-card {
+  border: 1px solid rgba(91,95,199,0.08);
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.history-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.history-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.circle-num.small {
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+}
+
+.history-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.history-bar {
+  width: 360px;
+  height: 12px;
+  background: #eee;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.history-fill {
+  height: 100%;
+  background: #6a5acd;
+  transition: width 0.3s;
+}
+
+.history-percent {
+  width: 44px;
+  text-align: center;
+  font-weight: 600;
+}
