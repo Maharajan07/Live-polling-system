@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import './StudentPanel.css';
 import { socket } from '../socket';
 import ChatPop from './ChatPopup';
+import KickedOut from './KickedOut';
 
 const StudentPanel = () => {
   const [name, setName] = useState('');
@@ -12,7 +13,7 @@ const StudentPanel = () => {
   const [joined, setJoined] = useState(false);
   const [timeLeft, setTimeLeft] = useState(null);
   const [participants, setParticipants] = useState([]);
-  const [kickedOut, setKickedOut] = useState(false);
+  const [kickedOut, setKickedOut] = useState(false); // ✅ consistent state
 
   const handleContinue = () => {
     if (name.trim()) {
@@ -47,20 +48,16 @@ const StudentPanel = () => {
     });
 
     socket.on('kickout', (kickedName) => {
-    if (kickedName === name) {
-      alert('You have been removed from the session by the teacher.');
-      setJoined(false);
-      setParticipants([]);
-      setPoll(null);
-    }
-  });
+      if (kickedName === name) {
+        setKickedOut(true); // ✅ fixed
+      }
+    });
 
     return () => {
       socket.off('pollData');
       socket.off('updateResult');
       socket.off('participants');
       socket.off('kickout');
-
     };
   }, [answered, name]);
 
@@ -78,10 +75,10 @@ const StudentPanel = () => {
     return `${mins}:${secs}`;
   };
 
-
+  // ✅ If kicked, immediately show KickedOut screen
   if (kickedOut) {
-  return <KickedOut />;
-}
+    return <KickedOut />;
+  }
 
   return (
     <div className="student-container">
@@ -166,6 +163,7 @@ const StudentPanel = () => {
           participants={participants}
           role="student"
           name={name}
+          onKicked={() => setKickedOut(true)} // ✅ fixed
         />
       )}
     </div>

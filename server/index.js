@@ -99,55 +99,66 @@ io.on("connection", (socket) => {
   });
 
   // -----------------
-  // CHAT EVENTS
-  // -----------------
-  socket.on("joinUser", ({ name, role }) => {
-    // Avoid duplicates if reconnect
-    participants = participants.filter((p) => p.id !== socket.id);
+// ---------- CHAT EVENTS ----------
+socket.on("joinUser", ({ name, role }) => {
+  // Avoid duplicates if reconnect
+  participants = participants.filter((p) => p.id !== socket.id);
 
-    const user = { id: socket.id, name, role };
-    participants.push(user);
+  const user = { id: socket.id, name, role };
+  participants.push(user);
 
-    io.emit("participants", participants);
-    console.log(`${name} (${role}) joined. Total: ${participants.length}`);
-  });
+  sendParticipants();
+  console.log(`${name} (${role}) joined. Total: ${participants.length}`);
+});
 
-  socket.on("chatMessage", (msg) => {
-    const sender = participants.find((p) => p.id === socket.id);
-    if (!sender) {
-      console.log("Message from unknown sender:", socket.id);
-      return;
-    }
+socket.on("chatMessage", (msg) => {
+  const sender = participants.find((p) => p.id === socket.id);
+  if (!sender) {
+    console.log("Message from unknown sender:", socket.id);
+    return;
+  }
 
-    const messageData = {
-      name: sender.name,
-      role: sender.role,
-      text: msg.text?.trim(),
-      time: new Date().toISOString(),
-    };
+  const messageData = {
+    name: sender.name,
+    role: sender.role,
+    text: msg.text?.trim(),
+    time: new Date().toISOString(),
+  };
 
-    io.emit("chatMessage", messageData);
-  });
+  io.emit("chatMessage", messageData);
+});
 
-  socket.on("kickUser", (userId) => {
-    io.to(userId).disconnectSockets(true);
+socket.on("kickUser", (userId) => {
+  const kicker = participants.find((p) => p.id === socket.id);
+  const target = participants.find((p) => p.id === userId);
+
+  // Only allow teacher to kick, and only kick students
+  if (kicker?.role === "teacher" && target?.role === "student") {
+    io.to(userId).emit("kicked"); // tell the student they were removed
     participants = participants.filter((p) => p.id !== userId);
-    io.emit("participants", participants);
-  });
+    sendParticipants();
+  }
+});
 
   // -----------------
   // DISCONNECT
   // -----------------
   socket.on("disconnect", () => {
-    const leavingUser = participants.find((p) => p.id === socket.id);
-    participants = participants.filter((p) => p.id !== socket.id);
-    io.emit("participants", participants);
-    if (leavingUser) {
-      console.log(`${leavingUser.name} (${leavingUser.role}) disconnected.`);
-    } else {
-      console.log(`Client disconnected: ${socket.id}`);
-    }
-  });
+  const leavingUser = participants.find((p) => p.id === socket.id);
+  participants = participants.filter((p) => p.id !== socket.id);
+  sendParticipants();
+  if (leavingUser) {
+    console.log(`${leavingUser.name} (${leavingUser.role}) disconnected.`);
+  } else {
+    console.log(`Client disconnected: ${socket.id}`);
+  }
+});
+
+// Utility function to send participants (without teacher)
+function sendParticipants() {
+  const filtered = participants.filter((u) => u.role !== "teacher");
+  io.emit("participants", filtered);
+}
 });
 
 const PORT = process.env.PORT || 5000;

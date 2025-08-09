@@ -116,26 +116,28 @@ const ChatPopup = ({ role, name, socket, onKicked }) => {
             </>
           ) : (
             <div className="chat-messages">
-              {participants.map((p) => (
-                <div key={p.id} className="chat-message">
-                  <div className="bubble">
-                    {p.name}{" "}
-                    {role === "teacher" && (
-                      <button
-                        style={{
-                          background: "transparent",
-                          border: "none",
-                          cursor: "pointer",
-                          marginLeft: "10px",
-                        }}
-                        onClick={() => handleKick(p.id)}
-                      >
-                        ❌
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
+              {participants
+  .filter((p) => p.role !== "teacher")
+  .map((p) => (
+    <div key={p.id} className="chat-message">
+      <div className="bubble">
+        {p.name}
+        {role === "teacher" && (
+          <button
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              marginLeft: "10px",
+            }}
+            onClick={() => handleKick(p.id)}
+          >
+            ❌
+          </button>
+        )}
+      </div>
+    </div>
+))}
             </div>
           )}
         </div>
