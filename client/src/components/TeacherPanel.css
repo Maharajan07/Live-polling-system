@@ -403,3 +403,265 @@ textarea {
   text-align: center;
   font-weight: 600;
 }
+
+
+/* src/components/TeacherPanel.css */
+.teacher-panel {
+  padding: 40px;
+  font-family: 'Inter', sans-serif;
+  color: #222;
+}
+
+/* ... keep your existing styles above unchanged ... */
+
+/* result bar adjustments (keeps original sizes but adds overlay & percentage placement) */
+.teacher-option-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.result-bar {
+  width: 100%;
+  max-width: 720px; /* cap width so overlay aligns with card */
+  height: 46px; /* slightly taller so overlay fits nicely */
+  background: #f2f2f5;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid rgba(91,95,199,0.08);
+}
+
+/* the colored fill */
+.result-bar .fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6a5acd, #7f6bf0);
+  transition: width 0.35s ease;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+/* overlay containing option number + text (inside the bar) */
+.bar-overlay {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+  width: calc(100% - 110px); /* leave room on the right for percentage */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bar-num, .history-bar-num {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  z-index: 3;
+}
+
+/* text inside the bar */
+.bar-text, .history-bar-text {
+  font-size: 15px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: calc(100% - 40px);
+  z-index: 3;
+}
+
+/* percentage label inside / outside logic */
+.bar-percentage,
+.history-bar-percent {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+/* when percentage is inside the filled area we keep text white by inline style; small class if needed */
+.bar-percentage.inside,
+.history-bar-percent.inside {
+  /* visually inside — color controlled inline in JSX */
+}
+
+/* smaller circle for history left (kept for visual parity) */
+.circle-num.small {
+  width: 26px;
+  height: 26px;
+  font-size: 12px;
+}
+
+/* History overlay: make the list scrollable correctly */
+.history-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 60px 20px;
+  z-index: 9999;
+}
+
+.history-panel {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 1000px;
+  max-height: 80vh;
+  overflow: visible; /* allow child to handle scrolling */
+  padding: 28px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+}
+
+/* make the list scrollable and sized relative to the panel header/footer */
+.history-list {
+  overflow-y: auto;
+  padding-right: 8px;
+  max-height: calc(80vh - 160px); /* 160px leaves room for headers and paddings */
+}
+
+/* history item bars use same visual rules as live result */
+.history-bar {
+  width: 100%;
+  height: 40px;
+  background: #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.history-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6a5acd, #7f6bf0);
+  transition: width 0.3s;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 1;
+}
+
+.history-bar-overlay {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  width: calc(100% - 100px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.history-bar-percent.outside {
+  /* when percent outside, color is dark (JS inline) */
+}
+
+/* ensure small screens still look ok */
+@media (max-width: 720px) {
+  .result-bar { height: 42px; }
+  .bar-overlay { width: calc(100% - 100px); }
+  .bar-percentage { right: 8px; }
+  .history-list { max-height: calc(80vh - 180px); }
+}
+
+
+/* Live Result Section */
+.live-result {
+    margin-top: 20px;
+    background: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.live-result h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 14px;
+}
+
+/* Each Option in Live Result */
+.live-option {
+    display: block;            /* force each option to be a block */
+    width: 100%;               /* take full container width */
+    background: #f7f7f7;
+    padding: 10px 14px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    font-size: 15px;
+    box-sizing: border-box;    /* ensure padding doesn't shrink width */
+    white-space: nowrap;       /* keep text on one line */
+    overflow: hidden;          /* hide overflow if text too long */
+    text-overflow: ellipsis;   /* add ... if text too long */
+}
+
+.live-option span {
+    font-weight: 500;
+}
+
+/* Percentage Bar */
+.live-bar {
+    height: 8px;
+    background: #ddd;
+    border-radius: 4px;
+    margin-top: 6px;
+    overflow: hidden;
+}
+
+.live-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4e9af1, #1c6ed5);
+    transition: width 0.3s ease-in-out;
+}
+
+/* Poll History Section */
+.poll-history {
+    margin-top: 25px;
+}
+
+.poll-history-item {
+    background: #fafafa;
+    padding: 12px 14px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.poll-history-item h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.poll-history-option {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+

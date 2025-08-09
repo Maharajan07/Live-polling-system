@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import './TeacherPanel.css';
 import { socket } from "../socket";
+import ChatPop from './ChatPopup';
 
 const TeacherPanel = () => {
   const [question, setQuestion] = useState('');
@@ -13,18 +14,21 @@ const TeacherPanel = () => {
   const [currentPoll, setCurrentPoll] = useState(null);
   const [resultsVisible, setResultsVisible] = useState(false);
 
-  // History overlay state
   const [showHistory, setShowHistory] = useState(false);
   const [pollHistory, setPollHistory] = useState([]);
 
+  // Chat & participants
+  const [joined, setJoined] = useState(true); // assume teacher is joined
+  const [participants, setParticipants] = useState([]);
+  const [name, setName] = useState("Teacher");
+
   useEffect(() => {
-    // When a new poll is created or a client joins, server emits 'pollData'
+    // Listen for poll events
     const handlePollData = (poll) => {
       setCurrentPoll({ ...poll });
       setResultsVisible(true);
     };
 
-    // When votes update, server emits 'updateResult'
     const handleUpdateResult = (updatedPoll) => {
       setCurrentPoll({ ...updatedPoll });
       setResultsVisible(true);
@@ -34,14 +38,21 @@ const TeacherPanel = () => {
       setPollHistory(history || []);
     };
 
+    // Listen for participant updates
+    const handleParticipants = (list) => {
+      setParticipants(list || []);
+    };
+
     socket.on('pollData', handlePollData);
     socket.on('updateResult', handleUpdateResult);
     socket.on('pollHistory', handleHistory);
+    socket.on('participants', handleParticipants);
 
     return () => {
       socket.off('pollData', handlePollData);
       socket.off('updateResult', handleUpdateResult);
       socket.off('pollHistory', handleHistory);
+      socket.off('participants', handleParticipants);
     };
   }, []);
 
@@ -67,7 +78,6 @@ const TeacherPanel = () => {
       return;
     }
 
-    // Build the newPoll object locally so teacher can see immediately
     const newPoll = {
       id: Date.now(),
       question,
@@ -75,18 +85,15 @@ const TeacherPanel = () => {
       options: options.map(o => ({ text: o.text, votes: 0 }))
     };
 
-    // Emit to server (server will set official id/timestamps/etc and broadcast)
     socket.emit('createPoll', {
       question,
       duration,
       options: options.map(o => ({ text: o.text, votes: 0 }))
     });
 
-    // Show the initial empty results immediately (0% for all)
     setCurrentPoll(newPoll);
     setResultsVisible(true);
 
-    // reset form
     setQuestion('');
     setOptions([
       { text: '', isCorrect: null },
@@ -95,7 +102,6 @@ const TeacherPanel = () => {
   };
 
   const openHistory = () => {
-    // request history from server and open overlay
     socket.emit('getPollHistory');
     setShowHistory(true);
   };
@@ -104,17 +110,22 @@ const TeacherPanel = () => {
     setShowHistory(false);
   };
 
-  // helper to compute percentage
   const computePercentage = (opt, poll) => {
     const total = (poll?.options || []).reduce((s, o) => s + (o.votes || 0), 0);
     return total === 0 ? 0 : Math.round(((opt.votes || 0) / total) * 100);
+  };
+
+  // Kick out participant
+  const handleKickOut = (participantId) => {
+    if (window.confirm("Are you sure you want to remove this participant?")) {
+      socket.emit("kickOut", participantId);
+    }
   };
 
   return (
     <div className="teacher-panel">
       <div className="label">✨ Intervue Poll</div>
 
-      {/* Top right history button */}
       <button className="history-btn" onClick={openHistory}>
         <span className="eye">👁</span> View Poll history
       </button>
@@ -124,6 +135,7 @@ const TeacherPanel = () => {
         Create and manage polls, ask questions, and monitor responses in real-time.
       </p>
 
+      {/* --- Question Section --- */}
       <div className="section">
         <label className="section-title">Enter your question</label>
         <div className="question-box-wrapper">
@@ -141,6 +153,7 @@ const TeacherPanel = () => {
         <div className="char-count">{question.length}/100</div>
       </div>
 
+      {/* --- Options Section --- */}
       <div className="section options-section">
         <label className="section-title">Edit Options</label>
         <div className="options-header">
@@ -187,7 +200,7 @@ const TeacherPanel = () => {
         <button className="ask-button" onClick={handleAskQuestion}>Ask Question</button>
       </div>
 
-      {/* ---------- RESULTS CARD (centered) ---------- */}
+      {/* --- Results --- */}
       {resultsVisible && currentPoll && (
         <div className="teacher-results-wrap">
           <div className="poll-card teacher-card">
@@ -201,17 +214,28 @@ const TeacherPanel = () => {
             <div className="card-options">
               {currentPoll.options.map((opt, idx) => {
                 const percentage = computePercentage(opt, currentPoll);
+                const overlayColor = percentage >= 12 ? '#fff' : '#111';
+
                 return (
                   <div key={idx} className="teacher-result-row">
                     <div className="teacher-option-left">
                       <div className="circle-num">{idx + 1}</div>
-                      <div className="option-text">{opt.text}</div>
                     </div>
+
                     <div className="teacher-option-right">
                       <div className="result-bar">
-                        <div className="fill" style={{ width: `${percentage}%` }}></div>
+                        <div className="fill" style={{ width: `${percentage}%` }} />
+                        <div className="bar-overlay" style={{ color: overlayColor }}>
+                          <div className="bar-num">{idx + 1}</div>
+                          <div className="bar-text" title={opt.text}>{opt.text}</div>
+                        </div>
+                        <div
+                          className={`bar-percentage ${percentage >= 12 ? 'inside' : 'outside'}`}
+                          style={{ color: percentage >= 12 ? '#fff' : '#111' }}
+                        >
+                          {percentage}%
+                        </div>
                       </div>
-                      <div className="percentage">{percentage}%</div>
                     </div>
                   </div>
                 );
@@ -219,12 +243,10 @@ const TeacherPanel = () => {
             </div>
           </div>
 
-          {/* Ask a new question button below/ to the right */}
           <div className="ask-new-wrap">
             <button
               className="ask-new-btn"
               onClick={() => {
-                // revert to the create form (teacher can add another question)
                 setResultsVisible(false);
                 setCurrentPoll(null);
               }}
@@ -235,7 +257,7 @@ const TeacherPanel = () => {
         </div>
       )}
 
-      {/* ---------- Poll History Overlay ---------- */}
+      {/* --- Poll History --- */}
       {showHistory && (
         <div className="history-overlay">
           <div className="history-panel">
@@ -252,29 +274,54 @@ const TeacherPanel = () => {
                   <h4>Question {i + 1}</h4>
                   <div className="history-question">{p.question}</div>
 
-                  <div className="history-card">
-                    {p.options.map((opt, idx) => {
-                      const total = (p.options || []).reduce((s, o) => s + (o.votes || 0), 0);
-                      const percent = total === 0 ? 0 : Math.round(((opt.votes || 0) / total) * 100);
-                      return (
-                        <div className="history-row" key={idx}>
-                          <div className="history-left">
-                            <div className="circle-num small">{idx + 1}</div>
-                            <div className="history-text">{opt.text}</div>
+                  <div className="poll-card teacher-card">
+                    <div className="card-options">
+                      {p.options.map((opt, idx) => {
+                        const percentage = computePercentage(opt, p);
+                        const overlayColor = percentage >= 12 ? '#fff' : '#111';
+
+                        return (
+                          <div key={idx} className="teacher-result-row">
+                            <div className="teacher-option-left">
+                              <div className="circle-num">{idx + 1}</div>
+                            </div>
+                            <div className="teacher-option-right">
+                              <div className="result-bar">
+                                <div className="fill" style={{ width: `${percentage}%` }} />
+                                <div className="bar-overlay" style={{ color: overlayColor }}>
+                                  <div className="bar-num">{idx + 1}</div>
+                                  <div className="bar-text" title={opt.text}>{opt.text}</div>
+                                </div>
+                                <div
+                                  className={`bar-percentage ${percentage >= 12 ? 'inside' : 'outside'}`}
+                                  style={{ color: percentage >= 12 ? '#fff' : '#111' }}
+                                >
+                                  {percentage}%
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div className="history-right">
-                            <div className="history-bar"><div className="history-fill" style={{ width: `${percent}%` }}></div></div>
-                            <div className="history-percent">{percent}%</div>
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
         </div>
+      )}
+
+      {/* --- Chat popup for teacher with kick out --- */}
+      {joined && (
+        <ChatPop
+          userType="teacher"
+          socket={socket}
+          participants={participants}
+          role="teacher"
+          name={name}
+          onKickOut={handleKickOut}
+        />
       )}
     </div>
   );

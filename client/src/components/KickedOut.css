@@ -1,0 +1,30 @@
+.kicked-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.logo-btn {
+  background-color: #6c4af2;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+}
+
+.kicked-container h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.kicked-container p {
+  font-size: 0.9rem;
+  color: #777;
+  max-width: 500px;
+}

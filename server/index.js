@@ -1,10 +1,10 @@
 // index.js
-import express from 'express';
-import http from 'http';
-import { Server } from 'socket.io';
-import cors from 'cors';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import express from "express";
+import http from "http";
+import { Server } from "socket.io";
+import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,103 +14,143 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST'],
+    origin: "http://localhost:5173", // adjust if needed
+    methods: ["GET", "POST"],
   },
 });
 
 app.use(cors());
 app.use(express.json());
 
-// Serve build in production (unchanged)
-if (process.env.NODE_ENV === 'production') {
-  const buildPath = path.join(__dirname, '../client/dist');
+// Serve build in production
+if (process.env.NODE_ENV === "production") {
+  const buildPath = path.join(__dirname, "../client/dist");
   app.use(express.static(buildPath));
-  app.get('*', (req, res) => res.sendFile(path.join(buildPath, 'index.html')));
+  app.get("*", (req, res) =>
+    res.sendFile(path.join(buildPath, "index.html"))
+  );
 }
 
-// store current poll and history
+// ---------- POLL STATE ----------
 let poll = null;
-let pollsHistory = []; // keep all created polls (with votes updated)
+let pollsHistory = [];
 
-io.on('connection', (socket) => {
-  console.log('Client connected:', socket.id);
+// ---------- CHAT STATE ----------
+let participants = [];
 
-  // send active poll if present
+// ---------- SOCKET LOGIC ----------
+io.on("connection", (socket) => {
+  console.log("Client connected:", socket.id);
+
+  // Send active poll to new connection
   if (poll) {
-    socket.emit('pollData', poll);
+    socket.emit("pollData", poll);
   }
 
-  socket.on('createPoll', (data) => {
-    // Create server-side poll with id
+  // -----------------
+  // POLL EVENTS
+  // -----------------
+  socket.on("createPoll", (data) => {
     poll = {
       id: Date.now(),
       question: data.question,
-      options: data.options.map(o => ({ text: o.text, votes: o.votes || 0 })),
+      options: data.options.map((o) => ({
+        text: o.text,
+        votes: o.votes || 0,
+      })),
       duration: data.duration || 15,
       createdAt: Date.now(),
     };
 
-    // push a deep copy into history
     pollsHistory.push(JSON.parse(JSON.stringify(poll)));
-
-    console.log('Poll created:', poll);
-
-    // Broadcast new poll to everyone (students & teacher)
-    io.emit('pollData', poll);
-
-    // Also emit updateResult so UI can show zeros immediately
-    io.emit('updateResult', poll);
+    io.emit("pollData", poll);
+    io.emit("updateResult", poll);
   });
 
-  socket.on('submitVote', (answerIndex) => {
+  socket.on("submitVote", (answerIndex) => {
     if (poll && poll.options[answerIndex]) {
       poll.options[answerIndex].votes += 1;
 
-      // update the corresponding poll in history by id
-      const hIndex = pollsHistory.findIndex(p => p.id === poll.id);
+      const hIndex = pollsHistory.findIndex((p) => p.id === poll.id);
       if (hIndex !== -1) {
-        pollsHistory[hIndex].options = poll.options.map(o => ({ ...o }));
+        pollsHistory[hIndex].options = poll.options.map((o) => ({ ...o }));
       }
 
-      console.log(`Vote received for option ${answerIndex}:`, poll);
-
-      // Broadcast only updateResult (not pollData) so clients don't reset answered state
-      io.emit('updateResult', poll);
+      io.emit("updateResult", poll);
     }
   });
 
-  // For the "askQuestion" event (if used), treat the same as createPoll
-  socket.on('askQuestion', (questionData) => {
+  socket.on("askQuestion", (questionData) => {
     poll = {
       id: Date.now(),
       question: questionData.text,
-      options: questionData.options.map(opt => ({ text: opt, votes: 0 })),
+      options: questionData.options.map((opt) => ({ text: opt, votes: 0 })),
       duration: questionData.duration || 15,
       createdAt: Date.now(),
     };
 
     pollsHistory.push(JSON.parse(JSON.stringify(poll)));
-    io.emit('pollData', poll);
-    io.emit('updateResult', poll);
+    io.emit("pollData", poll);
+    io.emit("updateResult", poll);
   });
 
-  socket.on('getPollHistory', () => {
-    // send the full history to the requester
-    socket.emit('pollHistory', pollsHistory);
+  socket.on("getPollHistory", () => {
+    socket.emit("pollHistory", pollsHistory);
   });
 
-  socket.on('joinStudent', (studentName) => {
-    console.log(`Student joined: ${studentName}`);
-    if (poll) {
-      socket.emit('pollData', poll);
+  // -----------------
+  // CHAT EVENTS
+  // -----------------
+  socket.on("joinUser", ({ name, role }) => {
+    // Avoid duplicates if reconnect
+    participants = participants.filter((p) => p.id !== socket.id);
+
+    const user = { id: socket.id, name, role };
+    participants.push(user);
+
+    io.emit("participants", participants);
+    console.log(`${name} (${role}) joined. Total: ${participants.length}`);
+  });
+
+  socket.on("chatMessage", (msg) => {
+    const sender = participants.find((p) => p.id === socket.id);
+    if (!sender) {
+      console.log("Message from unknown sender:", socket.id);
+      return;
     }
+
+    const messageData = {
+      name: sender.name,
+      role: sender.role,
+      text: msg.text?.trim(),
+      time: new Date().toISOString(),
+    };
+
+    io.emit("chatMessage", messageData);
   });
 
-  socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id);
+  socket.on("kickUser", (userId) => {
+    io.to(userId).disconnectSockets(true);
+    participants = participants.filter((p) => p.id !== userId);
+    io.emit("participants", participants);
+  });
+
+  // -----------------
+  // DISCONNECT
+  // -----------------
+  socket.on("disconnect", () => {
+    const leavingUser = participants.find((p) => p.id === socket.id);
+    participants = participants.filter((p) => p.id !== socket.id);
+    io.emit("participants", participants);
+    if (leavingUser) {
+      console.log(`${leavingUser.name} (${leavingUser.role}) disconnected.`);
+    } else {
+      console.log(`Client disconnected: ${socket.id}`);
+    }
   });
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+server.listen(PORT, () =>
+  console.log(`Server is running on port ${PORT}`)
+);
