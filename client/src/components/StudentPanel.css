@@ -1,30 +1,54 @@
+/*
+    StudentPanel.css
+    This is the complete, updated CSS file.
+    You can replace your existing file with this code.
+*/
+
+:root {
+  --primary-gradient: linear-gradient(90deg, #7565D9, #4D0ACD);
+  --button-gradient: linear-gradient(90deg, #8F64E1, #1D68BD);
+  --dark-text: #212121;
+  --light-text: #666666;
+  --bg-color: #ffffff;
+  --light-gray: #f2f2f2;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: 'Poppins', sans-serif;
+}
+
 .student-container {
   max-width: 600px;
   margin: 80px auto;
   text-align: center;
-  font-family: 'Inter', sans-serif;
   padding: 0 20px;
 }
 
 .student-tag {
-  background-color: #6c63ff;
+  background: var(--primary-gradient);
   color: white;
   display: inline-block;
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-weight: bold;
+  padding: 8px 16px;
+  border-radius: 20px; /* More rounded corners */
+  font-weight: 600;
+  font-size: 14px;
   margin-bottom: 20px;
+  box-shadow: 0 4px 10px rgba(95, 82, 233, 0.2); /* Subtle shadow for the tag */
 }
 
 .student-heading {
   font-size: 32px;
   margin-bottom: 10px;
+  color: var(--dark-text);
+  font-weight: 700;
 }
 
 .student-subtext {
-  color: #666;
+  color: var(--light-text);
   margin-bottom: 40px;
-  font-size: 15px;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .student-label {
@@ -32,87 +56,87 @@
   text-align: left;
   font-weight: 600;
   margin-bottom: 8px;
-  font-size: 14px;
+  font-size: 15px;
+  color: var(--dark-text);
 }
 
 .student-input {
   width: 100%;
-  padding: 16px;
+  padding: 18px 20px; /* Increased padding */
   font-size: 16px;
   border: none;
-  background-color: #f2f2f2;
-  margin-bottom: 40px;
+  background-color: var(--light-gray);
+  border-radius: 8px; /* Rounded corners */
+  margin-bottom: 30px; /* Reduced margin to match design */
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* subtle inner shadow */
+  color: var(--dark-text);
+}
+
+.student-input::placeholder {
+  color: #a0a0a0;
 }
 
 .student-button {
-  background: linear-gradient(to right, #6c63ff, #7b5fff);
+  background: var(--button-gradient);
   border: none;
   color: white;
-  padding: 14px 40px;
+  padding: 16px 50px;
   font-size: 16px;
   border-radius: 30px;
   cursor: pointer;
-  font-weight: bold;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgba(95, 82, 233, 0.3); /* Button shadow */
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-
-
-
-
-
-.student-option {
-  padding: 10px 15px;
-  margin: 8px 0;
-  width: 100%;
-  background: #f0f0f0;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.student-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(95, 82, 233, 0.4);
 }
 
-.student-option.selected {
-  background: #4cafef;
-  color: white;
+.student-button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
-.student-submit {
-  margin-top: 15px;
-  padding: 10px;
-  width: 100%;
-  background: #2196f3;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+/* === WAITING SCREEN === */
+.waiting-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.waiting-screen .student-tag {
+  margin-bottom: 40px;
+}
+.waiting-screen .waiting-text {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--dark-text);
+  margin-top: 30px;
+}
+/* Loader animation to match the design */
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #6c63ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.poll-results {
-  margin-top: 20px;
-}
-
-.result-option {
-  margin-bottom: 12px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: #ddd;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: #4caf50;
-}
-
-
-
+/* === POLL CARD === */
 .poll-card {
-  background: #fff;
+  background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   padding: 30px;
   max-width: 600px;
   margin: 40px auto;
@@ -124,290 +148,203 @@
   align-items: center;
   font-weight: bold;
   font-size: 18px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .poll-timer {
-  color: red;
-  font-weight: 600;
+  color: #ef4444; /* red */
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .poll-question {
-  font-size: 22px;
-  margin: 20px 0;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 15px 20px;
+  margin: 0 0 20px 0;
   color: #ffffff;
-  background: linear-gradient(180deg,#444,#666);
+  background: linear-gradient(90deg, #444, #2c2c2c);
+  border-radius: 8px;
+  line-height: 1.4;
 }
 
-.poll-option {
+.poll-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.poll-option-wrapper {
+  background: #f1f1f3;
+  border-radius: 8px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
   display: flex;
   align-items: center;
-  background: #f3f3f3;
-  border: 2px solid transparent;
-  padding: 12px 20px;
-  margin: 10px 0;
-  border-radius: 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  gap: 12px;
 }
 
-.poll-option:hover {
-  border-color: #ccc;
+.poll-option-wrapper:hover {
+  background: #e9e9eb;
 }
 
-.poll-option.selected {
-  border-color: #6c63ff;
-  background: #e0e0ff;
+.poll-option-wrapper.selected {
+  background: var(--button-gradient);
+  color: white;
+  box-shadow: 0 4px 12px rgba(95, 82, 233, 0.2);
 }
 
-.option-number {
-  background: #6c63ff;
+.poll-option-wrapper .option-number {
+  background: rgba(0, 0, 0, 0.1);
   color: white;
   border-radius: 50%;
   width: 28px;
   height: 28px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 12px;
   font-weight: bold;
+  font-size: 14px;
+}
+.poll-option-wrapper.selected .option-number {
+    background: rgba(255, 255, 255, 0.2); /* Faded white for selected state */
+    color: white;
+}
+
+.poll-option-wrapper .option-text {
+  font-weight: 600;
 }
 
 .student-submit {
-  background: linear-gradient(to right, #6c63ff, #5f52e9);
-  color: white;
+  background: var(--button-gradient);
   border: none;
-  padding: 12px 30px;
-  border-radius: 25px;
+  color: white;
+  padding: 14px 40px;
   font-size: 16px;
-  margin-top: 20px;
+  border-radius: 30px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  font-weight: 600;
+  margin-top: 25px;
+  float: right; /* Aligns to the right */
+  box-shadow: 0 8px 20px rgba(95, 82, 233, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.student-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(95, 82, 233, 0.4);
 }
 
 .student-submit:disabled {
-  opacity: 0.5;
+  background: #ccc;
   cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
-
+/* === POLL RESULTS === */
+.poll-results {
+  margin-top: 20px;
+}
 
 .result-option {
-  margin-bottom: 16px;
-}
-
-.result-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.option-number {
-  background-color: #5b5fc7;
-  color: white;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
-  margin-right: 8px;
-}
-
-.result-percent {
-  font-weight: 500;
-  font-size: 14px;
-  color: #000;
-}
-
-.progress-bar {
-  height: 10px;
-  background-color: #e0e0e0;
-  border-radius: 5px;
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background-color: #5b5fc7;
-  transition: width 0.3s ease-in-out;
-}
-
-
-
-/* ===== Scoped styles for StudentPanel poll only =====
-   These selectors only apply inside the poll card with the
-   "student-poll" class so other pages stay untouched. */
-
-.poll-card.student-poll {
-  max-width: 680px;
-  padding: 22px;
-  margin: 40px auto;
-  border-radius: 10px;
-  border: 1px solid rgba(128, 92, 255, 0.12);
-  box-shadow: 0 12px 30px rgba(20, 20, 20, 0.06);
-  background: #fff;
-}
-
-/* header + timer */
-.poll-card.student-poll .poll-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-.poll-card.student-poll .poll-header h3 {
-  font-size: 18px;
-  font-weight: 700;
-}
-.poll-card.student-poll .poll-timer {
-  color: #ef4444; /* red */
-  font-weight: 700;
-}
-
-/* dark gradient question bar */
-.poll-card.student-poll .poll-question {
-  font-size: 16px;
-  margin: 0 0 16px 0;
-  padding: 12px 14px;
-  color: #fff;
-  background: linear-gradient(90deg, #4b4b4b, #2c2c2c);
-  border-radius: 6px;
-  line-height: 1.35;
-}
-
-/* voting option button (voting state) */
-/* Results option where bar is the background */
-.poll-card.student-poll .result-option {
   position: relative;
-  margin-bottom: 10px;
-  border-radius: 8px;
-  overflow: hidden;
   background: #f1f1f3;
-  font-size: 15px;
-  font-weight: 600;
-  color: #111;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
 }
 
-/* the filled background for the percentage */
-.poll-card.student-poll .progress-fill {
+.result-option.correct {
+  background: var(--button-gradient);
+  color: white;
+}
+
+.result-option .progress-fill {
   position: absolute;
-  left: 0;
   top: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, #6c63ff, #5f52e9);
-  transition: width 0.35s ease;
+  left: 0;
+  height: 100%;
+  background: var(--button-gradient);
+  transition: width 0.3s ease;
   z-index: 1;
 }
 
-/* content on top of the bar */
-.poll-card.student-poll .result-content {
+.result-option.correct .progress-fill {
+  background: var(--button-gradient);
+}
+
+.result-option .result-content {
   position: relative;
   z-index: 2;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
+  padding: 12px 16px;
 }
 
-/* number badge stays visible */
-.poll-card.student-poll .option-number {
-  background: rgba(255, 255, 255, 0.85);
-  color: #6c63ff;
+.result-option .result-text {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+
+.result-option .option-number {
+  background: rgba(255, 255, 255, 0.5);
+  color: var(--dark-text);
   border-radius: 50%;
-  width: 26px;
-  height: 26px;
-  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 13px;
-}
-
-
-/* Submit button aligned to the right and sized like your design */
-.poll-card.student-poll .student-submit {
-  display: block;
-  width: 220px;
-  margin: 18px 0 6px auto; /* aligns to right inside the card */
-  padding: 10px 18px;
-  border-radius: 28px;
-  border: none;
-  font-weight: 600;
-  color: #fff;
-  background: linear-gradient(90deg, #6c63ff, #5f52e9);
-  cursor: pointer;
-  transition: transform 0.12s ease, box-shadow 0.12s ease;
-}
-.poll-card.student-poll .student-submit:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-.poll-card.student-poll .student-submit:not(:disabled):hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(95,82,233,0.18);
-}
-
-/* results state: percent + progress bar */
-.poll-card.student-poll .result-option {
-  margin-bottom: 14px;
-}
-.poll-card.student-poll .result-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 6px;
-}
-.poll-card.student-poll .result-text {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-}
-.poll-card.student-poll .result-percent {
-  font-weight: 700;
+  font-weight: bold;
   font-size: 14px;
-  color: #111;
 }
 
-/* larger rounded progress bar like screenshot */
-.poll-card.student-poll .progress-bar {
-  width: 100%;
-  height: 30px;
-  background: #f1f1f3;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
+.result-option .result-percent {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--dark-text);
 }
 
-.poll-card.student-poll .progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #6c63ff, #5f52e9);
-  transition: width 0.35s ease;
-  border-radius: 8px 0 0 8px;
-}
-
-/* small responsive tweak */
-@media (max-width: 700px) {
-  .poll-card.student-poll {
-    margin: 20px 18px;
-    padding: 18px;
-  }
-  .poll-card.student-poll .student-submit {
-    width: 100%;
-    margin-left: 0;
-  }
-}
-
-.student-poll .result-option.selectable:hover {
-  background: #e6e6e6;
-}
-
-.student-poll .result-option.selected {
-  background: #6c63ff;
+.result-option.selected .result-percent {
   color: white;
+}
+
+.result-option.selected .result-text {
+  color: white;
+}
+.result-option.selected .option-number {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.waiting-text {
+  margin-top: 40px;
+  font-weight: 600;
+  color: var(--light-text);
+}
+
+/* Chat Popup Button at the bottom-right */
+.chat-popup-btn {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 50px;
+  height: 50px;
+  background: var(--button-gradient);
+  color: white;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }

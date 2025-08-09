@@ -16,7 +16,7 @@
   right: 20px;
   width: 64px;
   height: 64px;
-  background: linear-gradient(180deg, #6c63ff 0%, #5f52e9 100%);
+  background: linear-gradient(180deg, #5A66D1);
   border: none;
   border-radius: 50%;
   box-shadow: 0 14px 40px rgba(95, 82, 233, 0.20);
@@ -252,7 +252,7 @@
 
 /* kick link style */
 .kick-link {
-  color: #1e73e8;
+  color: #8F64E1;
   text-decoration: underline;
   cursor: pointer;
   font-weight: 600;

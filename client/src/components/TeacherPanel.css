@@ -1,448 +1,307 @@
 /* src/components/TeacherPanel.css */
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+body {
+  background: #f7f7fa;
+  font-family: 'Inter', sans-serif;
+}
+
 .teacher-panel {
   padding: 40px;
-  font-family: 'Inter', sans-serif;
-  color: #222;
+  max-width: 900px;
+  margin: 0 auto;
+  color: #2e3032;
+  position: relative;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
 .label {
-  background: #6c3fd2;
+  background: linear-gradient(90deg, #7565D9, #4D0ACD);
   color: white;
   padding: 6px 16px;
   border-radius: 20px;
-  display: inline-block;
   font-weight: 500;
   font-size: 14px;
+  box-shadow: 0 4px 12px rgba(101, 84, 255, 0.1);
 }
 
-.title {
-  font-size: 36px;
-  margin: 20px 0 10px;
-}
-
-.description {
-  font-size: 16px;
-  color: #666;
-  max-width: 600px;
-  margin-bottom: 30px;
-}
-
-.section {
-  margin-bottom: 30px;
-}
-
-.section-title {
-  font-weight: 600;
-  font-size: 18px;
-  margin-bottom: 10px;
-  display: block;
-}
-
-.question-box-wrapper {
-  position: relative;
-}
-.question-box-wrapper select {
-  margin-right: 40%;
-}
-
-textarea {
-  width: 60%;
-  height: 130px;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-  background: #f2f2f2;
-  border-radius: 4px;
-  resize: none;
-}
-
-.question-box-wrapper select {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  background: #f2f2f2;
-  font-weight: 500;
-  font-size: 14px;
-}
-
-.char-count {
-  text-align: right;
-  font-size: 12px;
-  color: #666;
-  margin-top: 5px;
-  margin-right: 40%;
-}
-
-.options-section .options-header {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-  margin-right: 40%;
-  margin-bottom: 10px;
-  font-weight: 600;
-}
-
-.option-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-  width: 60%;
-}
-
-.option-number {
-  background: #6c3fd2;
-  color: white;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  margin-right: 10px;
-}
-
-.option-row input[type="text"] {
-  flex: 1;
-  padding: 10px;
-  border: none;
-  background: #f2f2f2;
-  border-radius: 4px;
-  margin-right: 20px;
-}
-
-.correct-toggle label {
-  margin-right: 10px;
-  font-size: 14px;
-}
-
-.correct-toggle input[type="radio"] {
-  margin-right: 4px;
-  accent-color: #6c3fd2;
-}
-
-.add-option {
-  margin-top: 10px;
-  background: none;
-  border: 1px solid #6c3fd2;
-  color: #6c3fd2;
-  border-radius: 6px;
-  padding: 8px 12px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.footer {
-  text-align: right;
-  margin-top: 40px;
-}
-
-.ask-button {
-  background: linear-gradient(to right, #8066f1, #5865f2);
-  color: white;
-  padding: 12px 24px;
-  font-size: 16px;
-  border-radius: 28px;
-  border: none;
-  cursor: pointer;
-}
-
-.loader {
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #6a0dad; /* purple */
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  animation: spin 1s linear infinite;
-  margin: 30px auto;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.waiting-screen {
-  text-align: center;
-  margin-top: 50px;
-}
-
-.waiting-text {
-  font-size: 18px;
-  font-weight: 500;
-  margin-top: 15px;
-}
-
-
-/* --- Add these styles to TeacherPanel.css --- */
-
-/* Top-right history button */
 .history-btn {
-  position: absolute;
-  right: 40px;
-  top: 28px;
-  background: linear-gradient(90deg,#8a63f7,#655bf3);
+  background: linear-gradient(90deg, #8F64E1);
   color: #fff;
   padding: 10px 18px;
   border-radius: 28px;
   border: none;
   cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 6px 18px rgba(101,84,255,0.12);
+  box-shadow: 0 6px 18px rgba(101, 84, 255, 0.12);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }
 
-/* Wrap the teacher results card centered and the ask-new button aligned right */
-.teacher-results-wrap {
+.title {
+  font-size: 36px;
+  margin: 20px 0 10px;
+  font-weight: 400;
+}
+
+.title strong {
+  font-weight: 700;
+  background: linear-gradient(90deg, black);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.description {
+  font-size: 16px;
+  color: #6a6e73;
+  max-width: 600px;
+  margin-bottom: 40px;
+}
+
+/* --- Form Section --- */
+
+.section-form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-top: 40px;
+  gap: 20px;
 }
 
-/* Use same .poll-card style already in StudentPanel — but add a class to adjust width */
-.teacher-card {
-  max-width: 720px;
-  width: 100%;
-  padding: 18px;
-  border-radius: 12px;
-  box-shadow: none;
-  border: 1px solid rgba(91,95,199,0.12);
-}
-
-/* card question */
-.card-question {
-  background: linear-gradient(180deg,#444,#666);
-  color: #fff;
-  padding: 12px 16px;
-  border-radius: 6px;
-  margin-bottom: 12px;
-}
-
-/* rows */
-.teacher-result-row {
+.section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.03);
+  margin-bottom: 10px;
 }
 
-.teacher-option-left {
+.section-title {
+  font-weight: 600;
+  font-size: 18px;
+  color: #2e3032;
+}
+
+.timer-dropdown select {
+  padding: 8px 12px;
+  border: 1px solid #e0e0e5;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4c4f55;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%236a6e73' class='bi bi-chevron-down' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+}
+
+.question-box-wrapper {
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  background: #F2F2F2;
+  border-radius: 12px;
+  resize: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(101, 84, 255, 0.2);
+}
+
+.char-count {
+  text-align: right;
+  font-size: 12px;
+  color: #9297a0;
+  margin-top: 5px;
+}
+
+.options-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.correct-label {
+  font-weight: 600;
+  font-size: 18px;
+  color: #2e3032;
+}
+
+.option-row {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-width: 260px;
+  gap: 15px;
 }
 
-/* .bar-num {
-  background: #5b5fc7;
-  color: #fff;
-  width: 34px;
-  height: 34px;
-  display: inline-flex;
+.option-number {
+  background: linear-gradient(135deg, #8a63f7, #655bf3);
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  font-weight: 700;
-} */
-
-.option-text {
-  font-size: 15px;
-}
-
-/* right area */
-.teacher-option-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.result-bar {
-  width: 420px;
-  height: 36px;
-  background: #f2f2f5;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-  border: 1px solid rgba(91,95,199,0.08);
-}
-
-.result-bar .fill {
-  height: 100%;
-  background: #6a5acd;
-  transition: width 0.35s ease;
-}
-
-.percentage {
-  width: 50px;
-  text-align: center;
+  font-size: 14px;
   font-weight: 600;
 }
 
-/* ask new question button below card (right-aligned visually) */
-.ask-new-wrap {
-  width: 720px;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 18px;
+.option-row input[type="text"] {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: #F2F2F2;
+  border-radius: 8px;
+  font-size: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease;
 }
 
-.ask-new-btn {
-  background: linear-gradient(90deg,#8066f1,#5865f2);
+.option-row input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(101, 84, 255, 0.2);
+}
+
+.correct-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4c4f55;
+  white-space: nowrap;
+}
+
+.correct-toggle label {
+  cursor: pointer;
+}
+
+.correct-toggle input[type="radio"] {
+  accent-color: #655bf3;
+  margin-right: 4px;
+}
+
+.add-option {
+  background: #fff;
+  border: 1px solid #dcdce1;
+  color: #655bf3;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  align-self: flex-start;
+  margin-top: 5px;
+  transition: background-color 0.2s ease;
+}
+
+.add-option:hover {
+  background: #f0f0f5;
+}
+
+.ask-button {
+  background: linear-gradient(90deg, #8F64E1, #1D68BD);
   color: white;
-  padding: 12px 28px;
+  padding: 14px 30px;
+  font-size: 16px;
   border-radius: 28px;
   border: none;
   cursor: pointer;
   font-weight: 600;
+  margin-top: 20px;
+  align-self: flex-end;
+  box-shadow: 0 8px 20px rgba(88, 101, 242, 0.2);
 }
 
-/* History overlay */
-.history-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
+/* --- Results Section --- */
+
+.teacher-results-wrap {
+  margin-top: 40px;
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 60px 20px;
-  z-index: 9999;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
 }
 
-.history-panel {
-  background: #fff;
-  border-radius: 12px;
+.poll-card.teacher-card {
   width: 100%;
-  max-width: 1000px;
-  max-height: 80vh;
-  overflow: hidden;
-  padding: 28px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.12);
+  max-width: 720px;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
 }
 
-.history-header {
+.poll-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 18px;
+  margin-bottom: 12px;
+  color: #6a6e73;
 }
 
-.close-history {
-  background: transparent;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
+.poll-title {
+  font-size: 16px;
+  font-weight: 500;
 }
 
-/* Scrollable history list */
-.history-list {
-  overflow-y: auto;
-  padding-right: 8px;
+.poll-timer {
+  font-size: 16px;
+  font-weight: 500;
 }
 
-/* Each history item card */
-.history-item {
-  margin-bottom: 28px;
-}
-
-.history-question {
-  background: linear-gradient(180deg,#444,#666);
+.poll-question-text {
+  background: linear-gradient(180deg, #444444, #666666);
   color: #fff;
-  padding: 10px 14px;
-  border-radius: 6px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.teacher-result-row {
   margin-bottom: 12px;
 }
 
-.history-card {
-  border: 1px solid rgba(91,95,199,0.08);
-  padding: 12px;
-  border-radius: 8px;
-}
-
-.history-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-}
-
-.history-left {
+.result-bar-container {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.circle-num.small {
-  width: 26px;
-  height: 26px;
-  font-size: 12px;
-}
-
-.history-right {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.history-bar {
-  width: 360px;
-  height: 12px;
-  background: #eee;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.history-fill {
-  height: 100%;
-  background: #6a5acd;
-  transition: width 0.3s;
-}
-
-.history-percent {
-  width: 44px;
-  text-align: center;
-  font-weight: 600;
-}
-
-
-/* src/components/TeacherPanel.css */
-.teacher-panel {
-  padding: 40px;
-  font-family: 'Inter', sans-serif;
-  color: #222;
-}
-
-/* ... keep your existing styles above unchanged ... */
-
-/* result bar adjustments (keeps original sizes but adds overlay & percentage placement) */
-.teacher-option-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
+  width: 100%;
 }
 
 .result-bar {
-  width: 100%;
-  max-width: 720px; /* cap width so overlay aligns with card */
-  height: 46px; /* slightly taller so overlay fits nicely */
+  flex: 1;
+  height: 48px;
   background: #f2f2f5;
   border-radius: 10px;
-  overflow: hidden;
   position: relative;
-  border: 1px solid rgba(91,95,199,0.08);
+  overflow: hidden;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* the colored fill */
 .result-bar .fill {
   height: 100%;
-  background: linear-gradient(90deg, #6a5acd, #7f6bf0);
+  background: #8066f1;
   transition: width 0.35s ease;
   position: absolute;
   left: 0;
@@ -450,133 +309,15 @@ textarea {
   z-index: 1;
 }
 
-/* overlay containing option number + text (inside the bar) */
 .bar-overlay {
   position: absolute;
-  left: 14px;
+  left: 15px;
   top: 50%;
   transform: translateY(-50%);
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 10px;
-  pointer-events: none;
-  width: calc(100% - 110px); /* leave room on the right for percentage */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.bar-num, .history-bar-num {
-  background: rgba(255,255,255,0.18);
-  color: #fff;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 13px;
-  z-index: 3;
-}
-
-/* text inside the bar */
-.bar-text, .history-bar-text {
-  font-size: 15px;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: calc(100% - 40px);
-  z-index: 3;
-}
-
-/* percentage label inside / outside logic */
-.bar-percentage,
-.history-bar-percent {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 3;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 8px;
-}
-
-/* when percentage is inside the filled area we keep text white by inline style; small class if needed */
-.bar-percentage.inside,
-.history-bar-percent.inside {
-  /* visually inside — color controlled inline in JSX */
-}
-
-/* smaller circle for history left (kept for visual parity) */
-.circle-num.small {
-  width: 26px;
-  height: 26px;
-  font-size: 12px;
-}
-
-/* History overlay: make the list scrollable correctly */
-.history-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 60px 20px;
-  z-index: 9999;
-}
-
-.history-panel {
-  background: #fff;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 1000px;
-  max-height: 80vh;
-  overflow: visible; /* allow child to handle scrolling */
-  padding: 28px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.12);
-}
-
-/* make the list scrollable and sized relative to the panel header/footer */
-.history-list {
-  overflow-y: auto;
-  padding-right: 8px;
-  max-height: calc(80vh - 160px); /* 160px leaves room for headers and paddings */
-}
-
-/* history item bars use same visual rules as live result */
-.history-bar {
-  width: 100%;
-  height: 40px;
-  background: #eee;
-  border-radius: 8px;
-  overflow: hidden;
-  position: relative;
-}
-
-.history-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #6a5acd, #7f6bf0);
-  transition: width 0.3s;
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 1;
-}
-
-.history-bar-overlay {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  gap: 12px;
   pointer-events: none;
   width: calc(100% - 100px);
   white-space: nowrap;
@@ -584,90 +325,176 @@ textarea {
   text-overflow: ellipsis;
 }
 
-.history-bar-percent.outside {
-  /* when percent outside, color is dark (JS inline) */
+.bar-num {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
 }
 
-/* ensure small screens still look ok */
-@media (max-width: 720px) {
-  .result-bar { height: 42px; }
-  .bar-overlay { width: calc(100% - 100px); }
-  .bar-percentage { right: 8px; }
-  .history-list { max-height: calc(80vh - 180px); }
+.bar-text {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-
-/* Live Result Section */
-.live-result {
-    margin-top: 20px;
-    background: #fff;
-    padding: 16px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.08);
+.percentage-text {
+  width: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #4c4f55;
+  text-align: right;
 }
 
-.live-result h3 {
-    font-size: 18px;
-    font-weight: 600;
-    margin-bottom: 14px;
+.ask-new-btn {
+  background: linear-gradient(90deg, #8066f1, #5865f2);
+  color: white;
+  padding: 14px 30px;
+  border-radius: 28px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 8px 20px rgba(88, 101, 242, 0.2);
 }
 
-/* Each Option in Live Result */
-.live-option {
-    display: block;            /* force each option to be a block */
-    width: 100%;               /* take full container width */
-    background: #f7f7f7;
-    padding: 10px 14px;
-    margin-bottom: 10px;
-    border-radius: 6px;
+/* --- Poll History Overlay --- */
+
+.history-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 60px;
+  z-index: 9999;
+}
+
+.history-panel {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 800px;
+  max-height: 80vh;
+  padding: 28px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.history-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #2e3032;
+}
+
+.close-history {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #4c4f55;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.history-list {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding-right: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.history-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background-color: #e0e0e5;
+  border-radius: 4px;
+}
+
+.history-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-item h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2e3032;
+}
+
+/* For smaller screens */
+@media (max-width: 768px) {
+  .teacher-panel {
+    padding: 20px;
+  }
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .history-btn {
+    align-self: flex-end;
+  }
+  .title {
+    font-size: 28px;
+  }
+  .description {
     font-size: 15px;
-    box-sizing: border-box;    /* ensure padding doesn't shrink width */
-    white-space: nowrap;       /* keep text on one line */
-    overflow: hidden;          /* hide overflow if text too long */
-    text-overflow: ellipsis;   /* add ... if text too long */
+  }
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .correct-label {
+    align-self: flex-end;
+  }
+  .option-row {
+    flex-wrap: wrap;
+  }
+  .correct-toggle {
+    margin-left: 45px;
+  }
+  .ask-button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .poll-card.teacher-card {
+    padding: 16px;
+  }
+  .result-bar-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .result-bar {
+    width: 100%;
+  }
+  .percentage-text {
+    align-self: flex-end;
+  }
+  .history-list {
+    padding-right: 10px;
+    gap: 20px;
+  }
 }
-
-.live-option span {
-    font-weight: 500;
-}
-
-/* Percentage Bar */
-.live-bar {
-    height: 8px;
-    background: #ddd;
-    border-radius: 4px;
-    margin-top: 6px;
-    overflow: hidden;
-}
-
-.live-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #4e9af1, #1c6ed5);
-    transition: width 0.3s ease-in-out;
-}
-
-/* Poll History Section */
-.poll-history {
-    margin-top: 25px;
-}
-
-.poll-history-item {
-    background: #fafafa;
-    padding: 12px 14px;
-    border-radius: 6px;
-    margin-bottom: 12px;
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.05);
-}
-
-.poll-history-item h4 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 8px;
-}
-
-.poll-history-option {
-    font-size: 14px;
-    margin-bottom: 4px;
-}
-
-

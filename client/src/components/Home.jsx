@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
+import pollIcon from '../assets/Vector.png';
+
 
 const Home = () => {
   const [role, setRole] = useState(null);
@@ -14,7 +16,16 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      <div className="home-tag">✨ Intervue Poll</div>
+      <div className="home-tag"><img 
+    src={pollIcon} 
+    alt="poll icon" 
+    style={{
+      height: '1em',
+      width: '1em',
+      verticalAlign: 'middle',
+      marginRight: '0.3em'
+    }} 
+  /> Intervue Poll</div>
       <h1 className="home-heading">
         Welcome to the <strong>Live Polling System</strong>
       </h1>

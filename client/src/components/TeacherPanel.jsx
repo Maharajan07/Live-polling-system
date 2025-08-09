@@ -3,6 +3,10 @@ import React, { useState, useEffect } from 'react';
 import './TeacherPanel.css';
 import { socket } from "../socket";
 import ChatPop from './ChatPopup';
+import pollIcon from '../assets/Vector.png';
+import Eye from '../assets/Eye.png';
+
+
 
 const TeacherPanel = () => {
   const [question, setQuestion] = useState('');
@@ -124,80 +128,110 @@ const TeacherPanel = () => {
 
   return (
     <div className="teacher-panel">
-      <div className="label">✨ Intervue Poll</div>
+      <div className="top-bar">
+        <div className="label">
+  <img 
+    src={pollIcon} 
+    alt="poll icon" 
+    style={{
+      height: '1em',
+      width: '1em',
+      verticalAlign: 'middle',
+      marginRight: '0.3em'
+    }} 
+  />
+  Intervue Poll
+</div>
 
-      <button className="history-btn" onClick={openHistory}>
-        <span className="eye">👁</span> View Poll history
-      </button>
+        <button className="history-btn" onClick={openHistory}>
+          <span className="eye"><img 
+                    src={Eye} 
+                    alt="eye" 
+                    style={{
+                      height: '1.5em',
+                      width: '1.5em',
+                      verticalAlign: 'middle',
+                      marginRight: '0.3em'
+                    }} 
+                  /></span> View Poll history
+                        </button>
+                      </div>
 
-      <h1 className="title">Let’s <strong>Get Started</strong></h1>
+      <h1 className="title">
+        Let’s <strong>Get Started</strong>
+      </h1>
       <p className="description">
-        Create and manage polls, ask questions, and monitor responses in real-time.
+        If you’re a teacher, you'll have the ability to create and manage polls,
+        ask questions, and monitor your students' responses in real-time.
       </p>
 
       {/* --- Question Section --- */}
-      <div className="section">
-        <label className="section-title">Enter your question</label>
+      <div className="section-form">
+        <div className="section-header">
+          <label className="section-title">Enter your question</label>
+          <div className="timer-dropdown">
+            <select value={duration} onChange={(e) => setDuration(Number(e.target.value))}>
+              <option value={60}>60 seconds</option>
+              <option value={30}>30 seconds</option>
+              <option value={15}>15 seconds</option>
+            </select>
+          </div>
+        </div>
         <div className="question-box-wrapper">
           <textarea
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             maxLength={100}
-            placeholder="Type your question here"
+            placeholder="Enter your question"
           />
-          <select value={duration} onChange={(e) => setDuration(Number(e.target.value))}>
-            <option value={15}>15 seconds</option>
-            <option value={30}>30 seconds</option>
-          </select>
-        </div>
-        <div className="char-count">{question.length}/100</div>
-      </div>
-
-      {/* --- Options Section --- */}
-      <div className="section options-section">
-        <label className="section-title">Edit Options</label>
-        <div className="options-header">
-          <span></span>
-          <span>Is it Correct?</span>
+          <div className="char-count">{question.length}/100</div>
         </div>
 
-        {options.map((option, index) => (
-          <div className="option-row" key={index}>
-            <div className="option-number">{index + 1}</div>
-            <input
-              type="text"
-              value={option.text}
-              onChange={(e) => handleOptionChange(index, e.target.value)}
-              placeholder={`Option ${index + 1}`}
-            />
-            <div className="correct-toggle">
-              <label>
-                <input
-                  type="radio"
-                  name={`correct-${index}`}
-                  checked={option.isCorrect === true}
-                  onChange={() => handleCorrectChange(index, true)}
-                />
-                Yes
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name={`correct-${index}`}
-                  checked={option.isCorrect === false}
-                  onChange={() => handleCorrectChange(index, false)}
-                />
-                No
-              </label>
-            </div>
+        {/* --- Options Section --- */}
+        <div className="options-section">
+          <div className="section-header">
+            <label className="section-title">Edit Options</label>
+            <div className="correct-label">Is it Correct?</div>
           </div>
-        ))}
+          {options.map((option, index) => (
+            <div className="option-row" key={index}>
+              <div className="option-number">{index + 1}</div>
+              <input
+                type="text"
+                value={option.text}
+                onChange={(e) => handleOptionChange(index, e.target.value)}
+                placeholder={`Option ${index + 1}`}
+              />
+              <div className="correct-toggle">
+                <label>
+                  <input
+                    type="radio"
+                    name={`correct-${index}`}
+                    checked={option.isCorrect === true}
+                    onChange={() => handleCorrectChange(index, true)}
+                  />
+                  Yes
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name={`correct-${index}`}
+                    checked={option.isCorrect === false}
+                    onChange={() => handleCorrectChange(index, false)}
+                  />
+                  No
+                </label>
+              </div>
+            </div>
+          ))}
+          <button className="add-option" onClick={addOption}>
+            + Add More option
+          </button>
+        </div>
 
-        <button className="add-option" onClick={addOption}>+ Add More option</button>
-      </div>
-
-      <div className="footer">
-        <button className="ask-button" onClick={handleAskQuestion}>Ask Question</button>
+        <button className="ask-button" onClick={handleAskQuestion}>
+          Ask Question
+        </button>
       </div>
 
       {/* --- Results --- */}
@@ -205,37 +239,27 @@ const TeacherPanel = () => {
         <div className="teacher-results-wrap">
           <div className="poll-card teacher-card">
             <div className="poll-header">
-              <h3>Question</h3>
-              <span className="poll-timer">⏱ {currentPoll.duration ? `${currentPoll.duration}s` : '00:15'}</span>
+              <h3 className="poll-title">Question 1</h3>
+              <span className="poll-timer">⏱ {currentPoll.duration ? `00:${currentPoll.duration}` : '00:15'}</span>
             </div>
-
-            <div className="card-question">{currentPoll.question}</div>
+            <div className="poll-question-text">{currentPoll.question}</div>
 
             <div className="card-options">
               {currentPoll.options.map((opt, idx) => {
                 const percentage = computePercentage(opt, currentPoll);
-                const overlayColor = percentage >= 12 ? '#fff' : '#111';
-
                 return (
                   <div key={idx} className="teacher-result-row">
-                    {/* <div className="teacher-option-left"> */}
-                      {/* <div className="circle-num">{idx + 1}</div> */}
-                    {/* </div> */}
-
-                    <div className="teacher-option-right">
+                    <div className="result-bar-container">
                       <div className="result-bar">
                         <div className="fill" style={{ width: `${percentage}%` }} />
-                        <div className="bar-overlay" style={{ color: overlayColor }}>
+                        <div className="bar-overlay">
                           <div className="bar-num">{idx + 1}</div>
-                          <div className="bar-text" title={opt.text}>{opt.text}</div>
-                        </div>
-                        <div
-                          className={`bar-percentage ${percentage >= 12 ? 'inside' : 'outside'}`}
-                          style={{ color: percentage >= 12 ? '#fff' : '#111' }}
-                        >
-                          {percentage}%
+                          <div className="bar-text" title={opt.text}>
+                            {opt.text}
+                          </div>
                         </div>
                       </div>
+                      <div className="percentage-text">{percentage}%</div>
                     </div>
                   </div>
                 );
@@ -243,17 +267,15 @@ const TeacherPanel = () => {
             </div>
           </div>
 
-          <div className="ask-new-wrap">
-            <button
-              className="ask-new-btn"
-              onClick={() => {
-                setResultsVisible(false);
-                setCurrentPoll(null);
-              }}
-            >
-              + Ask a new question
-            </button>
-          </div>
+          <button
+            className="ask-new-btn"
+            onClick={() => {
+              setResultsVisible(false);
+              setCurrentPoll(null);
+            }}
+          >
+            + Ask a new question
+          </button>
         </div>
       )}
 
@@ -268,37 +290,25 @@ const TeacherPanel = () => {
 
             <div className="history-list">
               {pollHistory.length === 0 && <p>No polls yet.</p>}
-
               {pollHistory.map((p, i) => (
                 <div className="history-item" key={p.id || i}>
                   <h4>Question {i + 1}</h4>
-                  <div className="history-question">{p.question}</div>
-
                   <div className="poll-card teacher-card">
+                    <div className="poll-question-text">{p.question}</div>
                     <div className="card-options">
                       {p.options.map((opt, idx) => {
                         const percentage = computePercentage(opt, p);
-                        const overlayColor = percentage >= 12 ? '#fff' : '#111';
-
                         return (
                           <div key={idx} className="teacher-result-row">
-                            {/* <div className="teacher-option-left">
-                              <div className="circle-num">{idx + 1}</div>
-                            </div> */}
-                            <div className="teacher-option-right">
+                            <div className="result-bar-container">
                               <div className="result-bar">
                                 <div className="fill" style={{ width: `${percentage}%` }} />
-                                <div className="bar-overlay" style={{ color: overlayColor }}>
+                                <div className="bar-overlay">
                                   <div className="bar-num">{idx + 1}</div>
                                   <div className="bar-text" title={opt.text}>{opt.text}</div>
                                 </div>
-                                <div
-                                  className={`bar-percentage ${percentage >= 12 ? 'inside' : 'outside'}`}
-                                  style={{ color: percentage >= 12 ? '#fff' : '#111' }}
-                                >
-                                  {percentage}%
-                                </div>
                               </div>
+                              <div className="percentage-text">{percentage}%</div>
                             </div>
                           </div>
                         );
@@ -328,3 +338,4 @@ const TeacherPanel = () => {
 };
 
 export default TeacherPanel;
+
