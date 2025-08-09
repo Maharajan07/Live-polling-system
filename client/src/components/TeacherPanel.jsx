@@ -218,9 +218,9 @@ const TeacherPanel = () => {
 
                 return (
                   <div key={idx} className="teacher-result-row">
-                    <div className="teacher-option-left">
-                      <div className="circle-num">{idx + 1}</div>
-                    </div>
+                    {/* <div className="teacher-option-left"> */}
+                      {/* <div className="circle-num">{idx + 1}</div> */}
+                    {/* </div> */}
 
                     <div className="teacher-option-right">
                       <div className="result-bar">
@@ -282,9 +282,9 @@ const TeacherPanel = () => {
 
                         return (
                           <div key={idx} className="teacher-result-row">
-                            <div className="teacher-option-left">
+                            {/* <div className="teacher-option-left">
                               <div className="circle-num">{idx + 1}</div>
-                            </div>
+                            </div> */}
                             <div className="teacher-option-right">
                               <div className="result-bar">
                                 <div className="fill" style={{ width: `${percentage}%` }} />

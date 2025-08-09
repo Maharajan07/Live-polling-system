@@ -106,7 +106,7 @@ const StudentPanel = () => {
           <p className="waiting-text">Wait for the teacher to ask questions..</p>
         </div>
       ) : (
-        <div className="poll-card">
+        <div className="poll-card student-poll">
           <div className="poll-header">
             <h3>Question 1</h3>
             <span className="poll-timer">⏱ {formatTime(timeLeft || 0)}</span>
@@ -114,46 +114,59 @@ const StudentPanel = () => {
           <h2 className="poll-question">{poll.question}</h2>
           {!answered ? (
             <>
-              {poll.options.map((opt, idx) => (
-                <button
-                  key={idx}
-                  className={`poll-option ${selectedOption === idx ? 'selected' : ''}`}
-                  onClick={() => setSelectedOption(idx)}
-                >
-                  <span className="option-number">{idx + 1}</span> {opt.text}
-                </button>
-              ))}
-              <button
-                className="student-submit"
-                onClick={handleSubmitVote}
-                disabled={selectedOption === null || timeLeft === 0}
-              >
-                Submit
-              </button>
-            </>
+    <div className="poll-options">
+      {poll.options.map((opt, idx) => (
+        <div
+          key={idx}
+          className={`result-option selectable ${selectedOption === idx ? 'selected' : ''}`}
+          onClick={() => setSelectedOption(idx)}
+        >
+          <div className="result-content">
+            <span className="result-text">
+              <span className="option-number">{idx + 1}</span> {opt.text}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <button
+      className="student-submit"
+      onClick={handleSubmitVote}
+      disabled={selectedOption === null || timeLeft === 0}
+    >
+      Submit
+    </button>
+  </>
           ) : (
             <div className="poll-results">
-              {poll.options.map((opt, idx) => {
-                const totalVotes = poll.options.reduce((sum, o) => sum + o.votes, 0);
-                const percentage = totalVotes === 0 ? 0 : Math.round((opt.votes / totalVotes) * 100);
-                return (
-                  <div key={idx} className="result-option">
-                    <div className="result-header">
-                      <span className="result-text">
-                        <span className="option-number">{idx + 1}</span> {opt.text}
-                      </span>
-                      <span className="result-percent">{percentage}%</span>
-                    </div>
-                    <div className="progress-bar">
-                      <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+  {poll.options.map((opt, idx) => {
+    const totalVotes = poll.options.reduce((sum, o) => sum + o.votes, 0);
+    const percentage = totalVotes === 0 ? 0 : Math.round((opt.votes / totalVotes) * 100);
+
+    return (
+      <div key={idx} className="result-option">
+        <div className="progress-fill" style={{ width: `${percentage}%` }}></div>
+        <div className="result-content">
+          <span className="result-text">
+            <span className="option-number">{idx + 1}</span> {opt.text}
+          </span>
+          <span className="result-percent">{percentage}%</span>
         </div>
+      </div>
+    );
+  })}
+</div>
+
+            
+
+          )}
+                          <p className="waiting-text">Wait for the teacher to ask a new question..</p>
+
+        </div>
+        
       )}
+
 
       {/* Chat Popup for students */}
       {joined && (
