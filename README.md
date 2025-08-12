@@ -3,7 +3,7 @@
 ---
 A full-stack real-time application enabling interactive polls and chat between teachers and students. Built with React, Express.js, and Socket.IO, the system allows teachers to create polls, students to answer in real-time, and both roles to engage via live chat.
 
-🔗 **Live Demo:** [Visit Site]((https://live-polling-system-idn9.onrender.com))
+🔗 **Live Demo:** [Visit Site](https://live-polling-system-idn9.onrender.com)
 
 
 ---
