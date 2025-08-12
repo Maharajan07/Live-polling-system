@@ -14,10 +14,13 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // adjust if needed
+    origin: process.env.NODE_ENV === "production"
+      ? "https://live-polling-system-idn9.onrender.com"
+      : "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
+
 
 app.use(cors());
 app.use(express.json());
