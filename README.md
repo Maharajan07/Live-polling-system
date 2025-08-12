@@ -1,10 +1,14 @@
-Live Polling & Chat System
+# Live Polling & Chat System
+
+---
 A full-stack real-time application enabling interactive polls and chat between teachers and students. Built with React, Express.js, and Socket.IO, the system allows teachers to create polls, students to answer in real-time, and both roles to engage via live chat.
 
 🔗 Live Demo: https://live-polling-system-idn9.onrender.com
 
-✨ Features
-🎓 Teacher Panel
+---
+
+## ✨ Features
+### 🎓 Teacher Panel
 Create and launch polls instantly
 
 View live poll results in real time
@@ -15,7 +19,7 @@ Configure poll duration (default 60 seconds)
 
 Remove students from the session
 
-🧑‍🎓 Student Panel
+### 🧑‍🎓 Student Panel
 Join with a unique name per browser tab
 
 Submit answers when a poll is active
@@ -24,12 +28,14 @@ View results immediately after submission or timeout
 
 Participate in real-time chat with the teacher and other students
 
-💬 Real-Time Chat
+### 💬 Real-Time Chat
 Instant two-way messaging
 
 Role-based display of messages (Teacher / Student)
 
 No page refresh required
+
+----
 
 🚀 Run Locally
 1️⃣ Clone the Project
@@ -61,10 +67,16 @@ Ensure the build output (dist folder) is referenced inside the server’s index.
 cd server
 npm start
 ```
-🛠 Tech Stack
+----
+### 🛠 Tech Stack
 Frontend: React (Vite), Tailwind CSS
-Backend: Node.js, Express.js, Socket.IO
-Real-Time Communication: WebSockets (Socket.IO)
-Deployment: Render / Railway / Heroku
 
-Made by Maharajan!
+Backend: Node.js, Express.js, Socket.IO
+
+Real-Time Communication: WebSockets (Socket.IO)
+
+Deployment: Render
+
+----
+
+#### Made by Maharajan!
